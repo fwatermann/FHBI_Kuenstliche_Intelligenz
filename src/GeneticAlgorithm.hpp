@@ -54,9 +54,9 @@ namespace KI {
                     while(generation < this->maxGenerations && !isGoal(&this->states[0])) {
 
                         //this->newStates = (T*) std::malloc(sizeof(T) * this->populationSize);
+                        //std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
 
                         for(int i = 0; i < this->populationSize; i+=2) {
-                            std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
                             T* father = &this->states[0];
                             T* mother = &this->states[this->top25Dist(this->generator)];
                             this->cross(father, mother, &this->newStates[i]);
@@ -64,6 +64,8 @@ namespace KI {
                             this->mutate(&this->newStates[i], this->mutationRate);
                             this->mutate(&this->newStates[i+1], this->mutationRate);
                         }
+
+                        std::sort(this->newStates, &this->newStates[this->populationSize], this->compareFunction);
 
                         //Swapping Buffers
                         T* tmp = this->states;
