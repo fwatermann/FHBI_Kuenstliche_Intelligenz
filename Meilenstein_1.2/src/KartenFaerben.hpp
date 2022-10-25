@@ -28,11 +28,11 @@ class KartenFaerben : public KI::GeneticAlgorithm::Problem<Karte> {
         static std::vector<std::vector<int>> edges;
 
     private:
-        std::default_random_engine generator;
+        /*std::default_random_engine generator;
         std::uniform_int_distribution<int> intDist = std::uniform_int_distribution<int>(0, 5);
         std::uniform_int_distribution<int> mutDist = std::uniform_int_distribution<int>(-2, 2);
         std::uniform_real_distribution<float> perDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
-        std::bernoulli_distribution boolDist = std::bernoulli_distribution();
+        std::bernoulli_distribution boolDist = std::bernoulli_distribution();*/
 
 
 };

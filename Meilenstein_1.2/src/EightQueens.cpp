@@ -3,6 +3,7 @@
 //
 
 #include "EightQueens.hpp"
+#include "RandomStuff.hpp"
 #include <iostream>
 #include <random>
 
@@ -46,7 +47,7 @@ bool EightQueens::compare(Chessboard &a, Chessboard &b) {
 
 void EightQueens::cross(Chessboard* a, Chessboard* b, Chessboard* out) {
     for(int i = 0; i < 8; i ++) {
-        out->queens[i] = this->boolDist(this->generator) ? a->queens[i] : b->queens[i];
+        out->queens[i] = getRandomBool() ? a->queens[i] : b->queens[i];
     }
 /*    out->queens[1] = a->queens[1];
     out->queens[2] = a->queens[2];
@@ -59,16 +60,16 @@ void EightQueens::cross(Chessboard* a, Chessboard* b, Chessboard* out) {
 
 void EightQueens::mutate(Chessboard* instance, float rate) {
     for(int i = 0; i < 8; i ++) {
-        float a = this->perDist(this->generator);
+        float a = getRandomPercent();
         if(a <= rate) {
-            instance->queens[i] = this->intDist(this->generator);//std::max(0, std::min(instance->queens[i] + this->mutDist(this->generator), 7));
+            instance->queens[i] = getNumberInRange(0, 7);
         }
     }
 }
 
 void EightQueens::generateRandom(Chessboard* board) {
     for(int i = 0; i < 8; i ++) {
-        board->queens[i] = this->intDist(this->generator);
+        board->queens[i] = getNumberInRange(0, 7);
     }
 }
 

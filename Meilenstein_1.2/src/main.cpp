@@ -3,7 +3,7 @@
 #include <chrono>
 #include <vector>
 
-#define PROBLEM_SELECTION 1
+#define PRINT_CSV
 
 void run8Queens();
 void runKartenFaerben();
@@ -56,7 +56,9 @@ void run8Queens() {
     std::vector<float> mutatRate = {0.1f, 0.2f, 0.3f, 0.4f};
     int repeat = 100;
 
-    //setbuf(stdout, NULL);
+#ifdef PRINT_CSV
+    printf("Population Size;Mutation Rate;Max Anzahl Generationen;Erfolgreich Anzahl;Erfolgreich Prozent;Durchschnitt Generationen;Bestes Ergebnis;Dauer\n");
+#endif
 
     std::chrono::steady_clock::time_point gStart = std::chrono::steady_clock::now();
     for (int i = 0; i < popSize.size(); i++) {
@@ -79,10 +81,17 @@ void run8Queens() {
                 }
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-                printf("PopSize: %d, MutatRate: %f, MaxGens: %d, Success: %d (%f), GenAvg: %f, BestFit: %d [%lld s]\n", popSize[i],
+#ifndef PRINT_CSV
+                printf("PopSize: %d, MutatRate: %.3f, MaxGens: %d, Success: %d (%.3f), GenAvg: %.3f, BestFit: %d [%.3f s]\n", popSize[i],
                        mutatRate[k], maxGens[j], successCounter, (float) successCounter / (float) repeat,
-                       (float) generationsNeeded / (float) successCounter, bestFitness,
-                       std::chrono::duration_cast<std::chrono::seconds>(end - start).count());
+                       successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
+                       std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0);
+#else
+                printf("%d;%.3f;%d;%d;%.3f;%.3f;%d;%.3f\n", popSize[i], mutatRate[k], maxGens[j],
+                       successCounter, (float)successCounter/(float)repeat,
+                       successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
+                       std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() / 1000.0);
+#endif
             }
         }
     }
@@ -103,7 +112,9 @@ void runKartenFaerben() {
     std::vector<float> mutatRate = {0.1f, 0.2f, 0.3f, 0.4f};
     int repeat = 100;
 
-    //setbuf(stdout, NULL);
+#ifdef PRINT_CSV
+    printf("Population Size;Mutation Rate;Max Anzahl Generationen;Erfolgreich Anzahl;Erfolgreich Prozent;Durchschnitt Generationen;Bestes Ergebnis;Dauer\n");
+#endif
 
     std::chrono::steady_clock::time_point gStart = std::chrono::steady_clock::now();
     for (int i = 0; i < popSize.size(); i++) {
@@ -116,21 +127,30 @@ void runKartenFaerben() {
 
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 for (int r = 0; r < repeat; r++) {
-                    KartenFaerben eq = KartenFaerben(mutatRate[k], popSize[i], maxGens[j]);
-                    std::pair<Karte *, std::pair<int, int>> result = eq.solve();
+                    auto* eq = new KartenFaerben(mutatRate[k], popSize[i], maxGens[j]);
+                    std::pair<Karte *, std::pair<int, int>> result = eq->solve();
                     if (result.first != nullptr) {
                         successCounter++;
                         generationsNeeded += result.second.first;
                     }
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
                     //printf(".");
+                    delete eq;
                 }
+
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-                printf("PopSize: %d, MutatRate: %f, MaxGens: %d, Success: %d (%f), GenAvg: %f, BestFit: %d [%.3f s]\n", popSize[i],
+#ifndef PRINT_CSV
+                printf("PopSize: %d, MutatRate: %.3f, MaxGens: %d, Success: %d (%.3f), GenAvg: %.3f, BestFit: %d [%.3f s]\n", popSize[i],
                        mutatRate[k], maxGens[j], successCounter, (float) successCounter / (float) repeat,
-                       (float) generationsNeeded / (float) successCounter, bestFitness,
+                       successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
                        std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0);
+#else
+                printf("%d;%.3f;%d;%d;%.3f;%.3f;%d;%.3f\n", popSize[i], mutatRate[k], maxGens[j],
+                       successCounter, (float)successCounter/(float)repeat,
+                       successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
+                       std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() / 1000.0);
+#endif
             }
         }
     }

@@ -10,18 +10,13 @@
 #include <algorithm>
 #include <functional>
 #include <utility>
-#include <random>
+#include "RandomStuff.hpp"
 #define randOut(min, max) (min + ( std::rand() % ( max - min + 1 ) ))
 #define randPercent (static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX))
 
 namespace KI {
 
     namespace GeneticAlgorithm {
-
-        class Individuum {
-            public:
-                virtual int calculateFitness() = 0;
-        };
 
         template<typename T>
         class Problem {
@@ -58,7 +53,7 @@ namespace KI {
 
                         for(int i = 0; i < this->populationSize; i+=2) {
                             T* father = &this->states[0];
-                            T* mother = &this->states[this->top25Dist(this->generator)];
+                            T* mother = &this->states[getNumberInRange(0, this->populationSize / 4)];
                             this->cross(father, mother, &this->newStates[i]);
                             this->cross(mother, father, &this->newStates[i+1]);
                             this->mutate(&this->newStates[i], this->mutationRate);
@@ -101,10 +96,10 @@ namespace KI {
                 int populationSize;
                 int maxGenerations;
 
-                std::default_random_engine generator = std::default_random_engine();
+                /*std::mt19937 generator = std::mt19937();
                 std::uniform_int_distribution<int> popDist = std::uniform_int_distribution<int>(0, this->populationSize);
                 std::uniform_int_distribution<int> top25Dist = std::uniform_int_distribution<int>(0, (int)(0.25 * this->populationSize));
-                std::uniform_real_distribution<float> floatDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
+                std::uniform_real_distribution<float> floatDist = std::uniform_real_distribution<float>(0.0f, 1.0f);*/
 
                 bool (*compareFunction)(T&, T&);
 

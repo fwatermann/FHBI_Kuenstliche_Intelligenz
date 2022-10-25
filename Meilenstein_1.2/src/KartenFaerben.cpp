@@ -3,6 +3,7 @@
 //
 
 #include "KartenFaerben.hpp"
+#include "RandomStuff.hpp"
 
 std::vector<std::vector<int>> KartenFaerben::edges = {{1, 2}, {2, 3}, {3}, {4}, {}, {}};
 
@@ -16,22 +17,22 @@ void KartenFaerben::display(Karte *state) {
 
 void KartenFaerben::cross(Karte *a, Karte *b, Karte *out) {
     for(int i = 0; i < 6; i ++) {
-        out->colors[i] = this->boolDist(this->generator) ? a->colors[i] : b->colors[i];
+        out->colors[i] = getRandomBool() ? a->colors[i] : b->colors[i];
     }
 }
 
 void KartenFaerben::mutate(Karte *instance, float rate) {
     for(int i = 0; i < 6; i ++) {
-        float a = this->perDist(this->generator);
+        float a = getRandomPercent();
         if(a <= rate) {
-            instance->colors[i] = this->intDist(this->generator);
+            instance->colors[i] = getNumberInRange(0, 5);
         }
     }
 }
 
 void KartenFaerben::generateRandom(Karte *out) {
     for(int i = 0; i < 6; i ++){
-        out->colors[i] = this->intDist(this->generator);
+        out->colors[i] = getNumberInRange(0, 5);
     }
 }
 
