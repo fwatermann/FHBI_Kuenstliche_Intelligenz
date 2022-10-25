@@ -4,9 +4,9 @@
 
 int main() {
 
-    std::vector<int> popSize = {2, 10, 50};
-    std::vector<int> maxGens = {10, 50, 75};
-    std::vector<float> mutatRate = {0.1f, 0.2f, 0.3f};
+    std::vector<int> popSize = {2, 10, 50, 100};
+    std::vector<int> maxGens = {10, 50, 75, 150};
+    std::vector<float> mutatRate = {0.1f, 0.2f, 0.3f, 0.4f};
     int repeat = 100;
 
     //setbuf(stdout, NULL);
@@ -18,22 +18,24 @@ int main() {
 
                 int successCounter = 0;
                 int generationsNeeded = 0;
+                int bestFitness = INT32_MAX;
 
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 for (int r = 0; r < repeat; r++) {
                     EightQueens eq = EightQueens(mutatRate[k], popSize[i], maxGens[j]);
-                    std::pair<Chessboard *, int> result = eq.solve();
+                    std::pair<Chessboard *, std::pair<int, int>> result = eq.solve();
                     if (result.first != nullptr) {
                         successCounter++;
-                        generationsNeeded += result.second;
+                        generationsNeeded += result.second.first;
                     }
+                    result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
                     printf(".");
                 }
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-                printf("PopSize: %d, MutatRate: %f, MaxGens: %d, SuccessRate: %f, GenAvg: %f [%lld s]\n", popSize[i],
-                       mutatRate[k], maxGens[j], (float) successCounter / (float) repeat,
-                       (float) generationsNeeded / (float) successCounter,
+                printf("PopSize: %d, MutatRate: %f, MaxGens: %d, Success: %d (%f), GenAvg: %f, BestFit: %d [%lld s]\n", popSize[i],
+                       mutatRate[k], maxGens[j], successCounter, (float) successCounter / (float) repeat,
+                       (float) generationsNeeded / (float) successCounter, bestFitness,
                        std::chrono::duration_cast<std::chrono::seconds>(end - start).count());
             }
         }

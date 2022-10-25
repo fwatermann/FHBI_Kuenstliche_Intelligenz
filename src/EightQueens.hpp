@@ -23,7 +23,7 @@ class EightQueens : public KI::GeneticAlgorithm::Problem<Chessboard> {
 
         void display(Chessboard *state) override;
 
-        void cross(Chessboard &a, Chessboard &b, Chessboard *out) override;
+        void cross(Chessboard* a, Chessboard* b, Chessboard *out) override;
 
         void mutate(Chessboard *instance, float rate) override;
 
@@ -34,6 +34,9 @@ class EightQueens : public KI::GeneticAlgorithm::Problem<Chessboard> {
     private:
         std::default_random_engine generator;
         std::uniform_int_distribution<int> intDist = std::uniform_int_distribution<int>(0, 7);
+        std::uniform_int_distribution<int> mutDist = std::uniform_int_distribution<int>(-2, 2);
+        std::uniform_real_distribution<float> perDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
+        std::bernoulli_distribution boolDist = std::bernoulli_distribution();
 
 };
 

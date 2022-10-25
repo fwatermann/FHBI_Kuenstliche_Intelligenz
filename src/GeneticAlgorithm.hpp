@@ -38,10 +38,10 @@ namespace KI {
                 };
 
 
-                std::pair<T*, int> solve() {
+                std::pair<T*, std::pair<int ,int>> solve() {
                     //printf("PopulationSize: %d MutationRate: %f MaxGenerations: %d\n", this->populationSize, this->mutationRate, this->maxGenerations);
-                    this->states = (T*) std::malloc(sizeof(T) * this->populationSize);
-                    this->newStates = (T*) std::malloc(sizeof(T) * this->populationSize);
+                    this->states = (T*) std::calloc(sizeof(T) * this->populationSize, 1);
+                    this->newStates = (T*) std::calloc(sizeof(T) * this->populationSize, 1);
 
                     //printf("Ptr: 0x%p Size: %d\n", this->states, sizeof(T) * this->populationSize);
 
@@ -56,8 +56,9 @@ namespace KI {
                         //this->newStates = (T*) std::malloc(sizeof(T) * this->populationSize);
 
                         for(int i = 0; i < this->populationSize; i+=2) {
-                            T father = this->states[0];
-                            T mother = this->selection();
+                            std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
+                            T* father = &this->states[0];
+                            T* mother = &this->states[this->top25Dist(this->generator)];
                             this->cross(father, mother, &this->newStates[i]);
                             this->cross(mother, father, &this->newStates[i+1]);
                             this->mutate(&this->newStates[i], this->mutationRate);
@@ -75,17 +76,19 @@ namespace KI {
                         generation ++;
                     }
 
+                    std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
+
                     if(isGoal(&this->states[0])) {
-                        return std::pair<T*, int>(&this->states[0], generation);
+                        return std::pair<T*, std::pair<int, int>>(&this->states[0], std::pair<int, int>(generation, this->states[0].calculateFitness()));
                     }
-                    return std::pair<T*, int>(nullptr, generation);
+                    return std::pair<T*, std::pair<int, int>>(nullptr, std::pair<int, int>(generation, this->states[0].calculateFitness()));
                 }
 
                 virtual bool isGoal(T* state) = 0;
 
                 virtual void display(T* state) = 0;
 
-                virtual void cross(T &parent1, T &parent2, T* out) = 0;
+                virtual void cross(T* parent1, T* parent2, T* out) = 0;
 
                 virtual void mutate(T* element, float rate) = 0;
 
@@ -97,24 +100,14 @@ namespace KI {
                 int maxGenerations;
 
                 std::default_random_engine generator = std::default_random_engine();
-                std::uniform_int_distribution<int> intDist = std::uniform_int_distribution<int>(0, this->populationSize);
-                std::uniform_int_distribution<int> top25Dist = std::uniform_int_distribution<int>(0, (int)(0.25*this->populationSize));
+                std::uniform_int_distribution<int> popDist = std::uniform_int_distribution<int>(0, this->populationSize);
+                std::uniform_int_distribution<int> top25Dist = std::uniform_int_distribution<int>(0, (int)(0.25 * this->populationSize));
                 std::uniform_real_distribution<float> floatDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
 
                 bool (*compareFunction)(T&, T&);
 
                 T* states = nullptr;
                 T* newStates = nullptr;
-
-                T selection() {
-                    std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
-                    return this->states[top25Dist(generator)];
-                }
-
-                T randomSelection() {
-                    std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
-                    return this->states[intDist(generator)];
-                }
 
         };
 

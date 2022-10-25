@@ -44,29 +44,32 @@ bool EightQueens::compare(Chessboard &a, Chessboard &b) {
     return a.calculateFitness() < b.calculateFitness();
 }
 
-void EightQueens::cross(Chessboard &a, Chessboard &b, Chessboard* out) {
-    out->queens[0] = a.queens[0];
-    out->queens[0] = a.queens[1];
-    out->queens[0] = a.queens[2];
-    out->queens[0] = a.queens[3];
-    out->queens[0] = b.queens[4];
-    out->queens[0] = b.queens[5];
-    out->queens[0] = b.queens[6];
-    out->queens[0] = b.queens[7];
+void EightQueens::cross(Chessboard* a, Chessboard* b, Chessboard* out) {
+    for(int i = 0; i < 8; i ++) {
+        out->queens[i] = this->boolDist(this->generator) ? a->queens[i] : b->queens[i];
+    }
+/*    out->queens[1] = a->queens[1];
+    out->queens[2] = a->queens[2];
+    out->queens[3] = a->queens[3];
+    out->queens[4] = b->queens[4];
+    out->queens[5] = b->queens[5];
+    out->queens[6] = b->queens[6];
+    out->queens[7] = b->queens[7];*/
 }
 
 void EightQueens::mutate(Chessboard* instance, float rate) {
     for(int i = 0; i < 8; i ++) {
-        float a = randPercent;
+        float a = this->perDist(this->generator);
         if(a <= rate) {
-            instance->queens[i] = this->intDist(this->generator);
+            instance->queens[i] = this->intDist(this->generator);//std::max(0, std::min(instance->queens[i] + this->mutDist(this->generator), 7));
         }
     }
 }
 
 void EightQueens::generateRandom(Chessboard* board) {
-    for(int i = 0; i < 8; i ++)
+    for(int i = 0; i < 8; i ++) {
         board->queens[i] = this->intDist(this->generator);
+    }
 }
 
 
