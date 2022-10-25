@@ -3,7 +3,7 @@
 #include <chrono>
 #include <vector>
 
-#define PRINT_CSV
+//#define PRINT_CSV
 
 void run8Queens();
 void runKartenFaerben();
