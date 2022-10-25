@@ -10,16 +10,47 @@ void runKartenFaerben();
 
 int main() {
 
-    if(PROBLEM_SELECTION == 0) {
-        run8Queens();
-    } else {
-        runKartenFaerben();
+    printf("Available problems: \n");
+    printf("\t1. 8-Queens problem\n");
+    printf("\t2. Map coloring problem\n\n");
+
+    bool ok = false;
+    while(!ok) {
+        printf("Select [1-2]: ");
+
+        int input;
+        std::cin >> input;
+
+        if(input < 1 || input > 2) {
+            printf("\nInvalid input.\n");
+            continue;
+        }
+
+        printf("\n\n");
+
+        ok = true;
+
+        switch (input) {
+            case 1:
+                run8Queens();
+                break;
+            case 2:
+                runKartenFaerben();
+                break;
+            default:
+                break;
+        }
     }
 
     return 0;
 }
 
 void run8Queens() {
+
+    printf("================================================\n");
+    printf("##              8 Queens Problem              ##\n");
+    printf("================================================\n\n");
+
     std::vector<int> popSize = {2, 10, 50, 100};
     std::vector<int> maxGens = {10, 50, 75, 150};
     std::vector<float> mutatRate = {0.1f, 0.2f, 0.3f, 0.4f};
@@ -45,7 +76,6 @@ void run8Queens() {
                         generationsNeeded += result.second.first;
                     }
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
-                    printf(".");
                 }
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
@@ -64,9 +94,9 @@ void run8Queens() {
 
 void runKartenFaerben() {
 
-    printf("===============================================\n");
-    printf("##               KARTEN FÄRBEN               ##\n");
-    printf("===============================================\n\n");
+    printf("================================================\n");
+    printf("##               KARTEN FAERBEN               ##\n");
+    printf("================================================\n\n");
 
     std::vector<int> popSize = {2, 10, 50, 100};
     std::vector<int> maxGens = {10, 50, 75, 150};
