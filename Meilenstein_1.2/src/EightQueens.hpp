@@ -20,7 +20,6 @@ class EightQueens : public KI::GeneticAlgorithm::Problem<Chessboard> {
 
         bool isGoal(Chessboard *state) override;
 
-        void display(Chessboard *state) override;
 
         void cross(Chessboard* a, Chessboard* b, Chessboard *out) override;
 
@@ -29,6 +28,7 @@ class EightQueens : public KI::GeneticAlgorithm::Problem<Chessboard> {
         void generateRandom(Chessboard *) override;
 
         static bool compare(Chessboard &a, Chessboard &b);
+        static void display(Chessboard *state);
 
     private:
 

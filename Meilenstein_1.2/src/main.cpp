@@ -68,6 +68,7 @@ void run8Queens() {
                 int successCounter = 0;
                 int generationsNeeded = 0;
                 int bestFitness = INT32_MAX;
+                Chessboard* best = nullptr;
 
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 for (int r = 0; r < repeat; r++) {
@@ -76,10 +77,15 @@ void run8Queens() {
                     if (result.first != nullptr) {
                         successCounter++;
                         generationsNeeded += result.second.first;
+                        if(best == nullptr || best->calculateFitness() > result.first->calculateFitness()) {
+                            best = result.first;
+                        }
                     }
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
                 }
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+                EightQueens::display(best);
+                printf("\\/\n");
 
 #ifndef PRINT_CSV
                 printf("PopSize: %d, MutatRate: %.3f, MaxGens: %d, Success: %d (%.3f), GenAvg: %.3f, BestFit: %d [%.3f s]\n", popSize[i],
@@ -124,6 +130,7 @@ void runKartenFaerben() {
                 int successCounter = 0;
                 int generationsNeeded = 0;
                 int bestFitness = INT32_MAX;
+                Karte* best = nullptr;
 
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 for (int r = 0; r < repeat; r++) {
@@ -132,11 +139,15 @@ void runKartenFaerben() {
                     if (result.first != nullptr) {
                         successCounter++;
                         generationsNeeded += result.second.first;
+                        if(best == nullptr || best->calculateFitness() > result.first->calculateFitness()) {
+                            best = result.first;
+                        }
                     }
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
-                    //printf(".");
                     delete eq;
                 }
+                KartenFaerben::display(best);
+                printf("\\/\n");
 
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 

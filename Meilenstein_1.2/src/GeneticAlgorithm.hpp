@@ -83,8 +83,6 @@ namespace KI {
 
                 virtual bool isGoal(T* state) = 0;
 
-                virtual void display(T* state) = 0;
-
                 virtual void cross(T* parent1, T* parent2, T* out) = 0;
 
                 virtual void mutate(T* element, float rate) = 0;

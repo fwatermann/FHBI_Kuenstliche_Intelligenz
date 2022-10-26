@@ -19,13 +19,13 @@ class KartenFaerben : public KI::GeneticAlgorithm::Problem<Karte> {
             : KI::GeneticAlgorithm::Problem<Karte>(mutatRate, popSize, maxGens, compare) {}
 
         bool isGoal(Karte *state) override;
-        void display(Karte *state) override;
         void cross(Karte* a, Karte* b, Karte* out) override;
         void mutate(Karte* instance, float rate) override;
         void generateRandom(Karte* out) override;
 
         static bool compare(Karte &a, Karte &b);
         static std::vector<std::vector<int>> edges;
+        static void display(Karte *state);
 
     private:
         /*std::default_random_engine generator;

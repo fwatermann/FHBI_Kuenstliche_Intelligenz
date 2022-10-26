@@ -12,7 +12,8 @@ bool KartenFaerben::isGoal(Karte *state) {
 }
 
 void KartenFaerben::display(Karte *state) {
-    printf("%d %d %d %d %d %d", state->colors[0], state->colors[1], state->colors[2], state->colors[3], state->colors[4], state->colors[5]);
+    if(state == nullptr) return;
+    printf("%d %d %d %d %d %d\n", state->colors[0], state->colors[1], state->colors[2], state->colors[3], state->colors[4], state->colors[5]);
 }
 
 void KartenFaerben::cross(Karte *a, Karte *b, Karte *out) {

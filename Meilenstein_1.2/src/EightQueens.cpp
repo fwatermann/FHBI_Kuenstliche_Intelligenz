@@ -36,6 +36,7 @@ bool EightQueens::isGoal(Chessboard* state) {
 }
 
 void EightQueens::display(Chessboard* state) {
+    if(state == nullptr) return;
     for(int i = 0; i < 8; i ++) {
         std::printf("%s%s%s%s%s%s%s%s\n", (state->queens[i]==0?"Q":"#"), (state->queens[i]==1?"Q":"#"), (state->queens[i]==2?"Q":"#"), (state->queens[i]==3?"Q":"#"), (state->queens[i]==4?"Q":"#"), (state->queens[i]==5?"Q":"#"), (state->queens[i]==6?"Q":"#"), (state->queens[i]==7?"Q":"#"));
     }
