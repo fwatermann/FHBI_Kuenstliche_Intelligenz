@@ -84,10 +84,10 @@ void run8Queens() {
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
                 }
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-                EightQueens::display(best);
-                printf("\\/\n");
 
 #ifndef PRINT_CSV
+                EightQueens::display(best);
+                printf("\\/\n");
                 printf("PopSize: %d, MutatRate: %.3f, MaxGens: %d, Success: %d (%.3f), GenAvg: %.3f, BestFit: %d [%.3f s]\n", popSize[i],
                        mutatRate[k], maxGens[j], successCounter, (float) successCounter / (float) repeat,
                        successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
@@ -146,12 +146,12 @@ void runKartenFaerben() {
                     result.second.second < bestFitness ? bestFitness = result.second.second : bestFitness;
                     delete eq;
                 }
-                KartenFaerben::display(best);
-                printf("\\/\n");
 
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
 #ifndef PRINT_CSV
+                KartenFaerben::display(best);
+                printf("\\/\n");
                 printf("PopSize: %d, MutatRate: %.3f, MaxGens: %d, Success: %d (%.3f), GenAvg: %.3f, BestFit: %d [%.3f s]\n", popSize[i],
                        mutatRate[k], maxGens[j], successCounter, (float) successCounter / (float) repeat,
                        successCounter > 0 ? (float)generationsNeeded / (float) successCounter : 0, bestFitness,
