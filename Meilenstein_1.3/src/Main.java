@@ -12,27 +12,52 @@ public class Main {
     //Zebra Puzzle
     public static void main(String[] args) {
 
+        long totalTime = 0;
 
-        ZebraPuzzle puzzle = new ZebraPuzzle();
-        long startTime = System.currentTimeMillis();
+        /* BT_SEARCH */
 
-        //BackjumpingBacktrackingSolver<Variable, Integer> strategy = new BackjumpingBacktrackingSolver<>();
-        //FlexibleBacktrackingSolver<Variable, Integer> strategy = new FlexibleBacktrackingSolver<>();
-        //MinConflictsSolver<Variable, Integer> strategy = new MinConflictsSolver<>(100000);
-        //SimpleBacktrackingSolver strategy = new SimpleBacktrackingSolver();
-        //HeuristikBacktrackingSolver strategy = new HeuristikBacktrackingSolver();
-        AC3SimpleBacktrackingSolver strategy = new AC3SimpleBacktrackingSolver();
-        Optional<Assignment<Variable, Integer>> result = strategy.solve(puzzle);
-
-        if (result.isEmpty()) {
-            System.out.println("No solution found");
-        } else {
-            System.out.println(result.get().toString());
+        long btSearchTime = 0;
+        int btSearchSuccess = 0;
+        for(int i = 0; i < 100; i++) {
+            ZebraPuzzle puzzle = new ZebraPuzzle();
+            SimpleBacktrackingSolver bt = new SimpleBacktrackingSolver();
+            long startTime = System.currentTimeMillis();
+            Optional<Assignment<Variable, Integer>> solution = bt.solve(puzzle);
+            long endTime = System.currentTimeMillis();
+            if(solution.isPresent()) btSearchSuccess++;
+            btSearchTime += endTime - startTime;
         }
+        System.out.printf("BT_SEARCH: %.3f ms Successful: %d%n", (double) btSearchTime / 100, btSearchSuccess);
 
-        long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime);
-        System.out.printf("Time: %.3f sec%n", (duration / 1000.0));
+        /* Heuristik_BT_SEARCH */
+
+        long heuristikBtSearchTime = 0;
+        int heuristicSuccess = 0;
+        for(int i = 0; i < 100; i++) {
+            ZebraPuzzle puzzle = new ZebraPuzzle();
+            HeuristikBacktrackingSolver bt = new HeuristikBacktrackingSolver();
+            long startTime = System.currentTimeMillis();
+            Optional<Assignment<Variable, Integer>> solution = bt.solve(puzzle);
+            long endTime = System.currentTimeMillis();
+            if(solution.isPresent()) heuristicSuccess++;
+            heuristikBtSearchTime += endTime - startTime;
+        }
+        System.out.printf("Heuristik_BT_SEARCH: %.3f ms Successful: %d%n", (double) heuristikBtSearchTime / 100, heuristicSuccess);
+
+        /* AC3_BT_SEARCH */
+
+        long ac3BtSearchTime = 0;
+        int ac3Success = 0;
+        for(int i = 0; i < 100; i++) {
+            ZebraPuzzle puzzle = new ZebraPuzzle();
+            AC3SimpleBacktrackingSolver bt = new AC3SimpleBacktrackingSolver();
+            long startTime = System.currentTimeMillis();
+            Optional<Assignment<Variable, Integer>> solution = bt.solve(puzzle);
+            long endTime = System.currentTimeMillis();
+            if(solution.isPresent()) ac3Success++;
+            ac3BtSearchTime += endTime - startTime;
+        }
+        System.out.printf("AC3_BT_SEARCH: %.3f ms Successful: %d%n", (double) ac3BtSearchTime / 100, ac3Success);
 
     }
 
