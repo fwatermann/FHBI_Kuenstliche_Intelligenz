@@ -11,7 +11,7 @@ int getNumberInRange(int start, int end) {
     return dis(gen);
 }
 
-float getRandomPercent() {
+float getRandomFloat() {
     std::uniform_real_distribution<> dis(0.0f, 1.0f);
     return (float)dis(gen);
 }

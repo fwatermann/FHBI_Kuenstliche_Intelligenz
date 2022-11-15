@@ -210,7 +210,7 @@ Jedes Gen des Kindes wird zufällig von Elternteil A oder Elternteil B übernomm
 ```cpp
 void KartenFaerben::mutate(Karte *instance, float rate) {  
     for(int i = 0; i < 6; i ++) {  
-        float a = getRandomPercent();  
+        float a = getRandomFloat();  
         if(a <= rate) {  
             instance->colors[i] = getNumberInRange(0, 5);  
         }  

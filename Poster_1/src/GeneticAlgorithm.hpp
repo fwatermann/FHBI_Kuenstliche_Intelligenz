@@ -62,6 +62,9 @@ namespace KI {
 
                         std::sort(this->newStates, &this->newStates[this->populationSize], this->compareFunction);
 
+                        printf("Fitness: %d\n", this->newStates[0].calculateFitness());
+                        this->display(&this->newStates[0]);
+
                         //Swapping Buffers
                         T* tmp = this->states;
                         this->states = this->newStates;
@@ -88,6 +91,8 @@ namespace KI {
                 virtual void mutate(T* element, float rate) = 0;
 
                 virtual void generateRandom(T*) = 0;
+
+                virtual void display(T* element) = 0;
 
             private:
                 float mutationRate;

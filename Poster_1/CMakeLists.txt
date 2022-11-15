@@ -3,4 +3,4 @@ project(Poster_1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/EightQueens.cpp src/KartenFaerben.cpp src/RandomStuff.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/RandomStuff.cpp src/Stundenplan.cpp src/Stundenplan.hpp)

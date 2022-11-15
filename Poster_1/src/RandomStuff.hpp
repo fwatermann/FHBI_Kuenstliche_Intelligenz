@@ -9,7 +9,7 @@
 #include <random>
 
 int getNumberInRange(int start, int end);
-float getRandomPercent();
+float getRandomFloat();
 bool getRandomBool();
 
 
