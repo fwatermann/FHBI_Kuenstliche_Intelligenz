@@ -45,6 +45,8 @@ namespace KI {
                     }
                     std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
 
+                    T best = std::move(this->states[0]);
+
                     int generation = 0;
                     while(generation < this->maxGenerations && !isGoal(&this->states[0])) {
 
@@ -62,8 +64,10 @@ namespace KI {
 
                         std::sort(this->newStates, &this->newStates[this->populationSize], this->compareFunction);
 
-                        printf("Fitness: %d\n", this->newStates[0].calculateFitness());
-                        this->display(&this->newStates[0]);
+                        if(this->compareFunction(this->newStates[0], best)) {
+                            best = std::move(this->newStates[0]);
+                        }
+                        //this->display(&this->newStates[0]);
 
                         //Swapping Buffers
                         T* tmp = this->states;
@@ -81,7 +85,7 @@ namespace KI {
                     if(isGoal(&this->states[0])) {
                         return std::pair<T*, std::pair<int, int>>(&this->states[0], std::pair<int, int>(generation, this->states[0].calculateFitness()));
                     }
-                    return std::pair<T*, std::pair<int, int>>(nullptr, std::pair<int, int>(generation, this->states[0].calculateFitness()));
+                    return std::pair<T*, std::pair<int, int>>(&best, std::pair<int, int>(generation, this->states[0].calculateFitness()));
                 }
 
                 virtual bool isGoal(T* state) = 0;

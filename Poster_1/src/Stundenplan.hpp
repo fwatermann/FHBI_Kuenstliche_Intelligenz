@@ -5,7 +5,8 @@
 #ifndef POSTER_1_STUNDENPLAN_HPP
 #define POSTER_1_STUNDENPLAN_HPP
 
-#define MODULES_TOTAL 16
+#define TOTAL_MODULES 16
+#define TOTAL_SEMESTERS 3
 #define DAYS_IN_WEEK 5
 #define SLOTS_PER_DAY 6
 #define MAX_ROOMS 2
@@ -72,17 +73,18 @@ static const int ModuleSemester[] = {1,1,1,1,1,3,3,3,3,3,5,5,5,5,5,5};
 
 
 struct Stundenplan {
-    int modules[MODULES_TOTAL][3]; //Day, Slot, Room
+    int modules[TOTAL_MODULES][3]; //Day, Slot, Room
     int calculateFitness();
 };
 
 bool doLecturerOverlap(int moduleA, int moduleB);
+char* getLecturerName(int module);
 
 class StundenplanProblem : public KI::GeneticAlgorithm::Problem<Stundenplan> {
 
     public:
-        StundenplanProblem(float mutatRate, int popSize, int maxGens)
-            : KI::GeneticAlgorithm::Problem<Stundenplan>(mutatRate, popSize, maxGens, compare) {}
+        StundenplanProblem(float mutateRate, int popSize, int maxGens)
+            : KI::GeneticAlgorithm::Problem<Stundenplan>(mutateRate, popSize, maxGens, compare) {}
 
         bool isGoal(Stundenplan *state) override;
         void cross(Stundenplan* a, Stundenplan* b, Stundenplan* out) override;

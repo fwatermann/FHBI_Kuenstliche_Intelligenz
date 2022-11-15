@@ -29,12 +29,8 @@
 - (x100) Keine Überschneidungen von Modulen in einem Semster
 - (x100) Keine Überschneidungen von Modulen eines Lecturers über alle Semester
 - (x100) Keine Doppeltbelegung eines Raumes zur gleichen Zeit
-
-**Erweiterungsmöglichkeiten:**
-- *(x05) Gesamt dauer an Modulen pro Tag pro Semester*
-- *(x05) letzte Veranstaltung am Tag pro Semester*
-- *(x02) Dauer Pausen zwischen Modulen*
-- *(x01) Anzahl an verwendeten Räumen*
+- (x20) Anzahl an verwendeten Räumen
+- (x05) Schlecht getimte Module (früher 10 Uhr, später 16 Uhr)
 
 ## Kodierung
 
