@@ -36,24 +36,21 @@ char *getLecturerName(int mod) {
 }
 
 int Stundenplan::calculateFitness() {
-    static int count = 0;
     int collisions_1 = 0; //Collisions between modules in same semester
     int collisions_2 = 0; //Collisions between modules with same lecturer
     int collisions_3 = 0; //Collisions between modules in same room
 
     for (int i = 0; i < TOTAL_MODULES; i++) {
-        int *modA = modules[i];
         for (int j = i + 1; j < TOTAL_MODULES; j++) {
-            int *modB = modules[j];
             //Same Day & Timeslot
-            if (modA[I_DAY] == modB[I_DAY] && modA[I_SLOT] == modB[I_SLOT]) {
+            if (modules[i][I_DAY] == modules[j][I_DAY] && modules[i][I_SLOT] == modules[j][I_SLOT]) {
                 if (ModuleSemester[i] == ModuleSemester[j]) { //Same Semester
                     collisions_1++;
                 }
                 if (doLecturerOverlap(i, j)) { //Same Lecturer
                     collisions_2++;
                 }
-                if (modA[I_ROOM] == modB[I_ROOM]) { //Same Room
+                if (modules[i][I_ROOM] == modules[j][I_ROOM]) { //Same Room
                     collisions_3++;
                 }
             }
@@ -66,7 +63,6 @@ int Stundenplan::calculateFitness() {
             badTimedModules++;
         }
     }
-    count ++;
     return 10 * collisions_1 + 10 * collisions_2 + 10 * collisions_3 + badTimedModules;
 }
 

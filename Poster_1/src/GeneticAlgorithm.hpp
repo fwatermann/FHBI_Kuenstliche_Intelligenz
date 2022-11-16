@@ -35,8 +35,8 @@ namespace KI {
 
 
                 std::pair<T, std::pair<int, int>> solve() {
-                    this->states = (T *) std::calloc(sizeof(T), this->populationSize);
-                    this->newStates = (T *) std::calloc(sizeof(T), this->populationSize);
+                    this->states = (T *) std::calloc(this->populationSize, sizeof(T));
+                    this->newStates = (T *) std::calloc(this->populationSize, sizeof(T));
 
                     printf("States from: %p to %p\n", this->states, this->states + this->populationSize);
                     printf("NewStates from: %p to %p\n", this->newStates, this->newStates + this->populationSize);
