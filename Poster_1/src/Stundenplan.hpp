@@ -9,7 +9,7 @@
 #define TOTAL_SEMESTERS 3
 #define DAYS_IN_WEEK 5
 #define SLOTS_PER_DAY 6
-#define MAX_ROOMS 2
+#define MAX_ROOMS 10
 
 #define I_DAY 0
 #define I_SLOT 1
@@ -79,6 +79,7 @@ struct Stundenplan {
 
 bool doLecturerOverlap(int moduleA, int moduleB);
 char* getLecturerName(int module);
+bool validateValues(Stundenplan *plan);
 
 class StundenplanProblem : public KI::GeneticAlgorithm::Problem<Stundenplan> {
 
@@ -94,6 +95,8 @@ class StundenplanProblem : public KI::GeneticAlgorithm::Problem<Stundenplan> {
         static bool compare(Stundenplan &a, Stundenplan &b);
         void display(Stundenplan *state) override;
 };
+
+
 
 
 #endif //POSTER_1_STUNDENPLAN_HPP

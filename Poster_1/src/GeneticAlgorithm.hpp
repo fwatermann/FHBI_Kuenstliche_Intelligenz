@@ -11,8 +11,7 @@
 #include <functional>
 #include <utility>
 #include "RandomStuff.hpp"
-#define randOut(min, max) (min + ( std::rand() % ( max - min + 1 ) ))
-#define randPercent (static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX))
+#include "Stundenplan.hpp"
 
 namespace KI {
 
@@ -21,8 +20,10 @@ namespace KI {
         template<typename T>
         class Problem {
             public:
-                explicit Problem(float mutationRate, int populationSize, int maxGenerations, bool (*compareFunction)(T&, T&))
-                        : mutationRate{mutationRate}, populationSize{populationSize}, maxGenerations{maxGenerations}, compareFunction{compareFunction} {
+                explicit Problem(float mutationRate, int populationSize, int maxGenerations,
+                                 bool (*compareFunction)(T &, T &))
+                        : mutationRate{mutationRate}, populationSize{populationSize}, maxGenerations{maxGenerations},
+                          compareFunction{compareFunction} {
                 }
 
                 ~Problem() {
@@ -33,85 +34,90 @@ namespace KI {
                 };
 
 
-                std::pair<T*, std::pair<int ,int>> solve() {
-                    //printf("PopulationSize: %d MutationRate: %f MaxGenerations: %d\n", this->populationSize, this->mutationRate, this->maxGenerations);
-                    this->states = (T*) std::calloc(sizeof(T) * this->populationSize, 1);
-                    this->newStates = (T*) std::calloc(sizeof(T) * this->populationSize, 1);
+                std::pair<T, std::pair<int, int>> solve() {
+                    this->states = (T *) std::calloc(sizeof(T), this->populationSize);
+                    this->newStates = (T *) std::calloc(sizeof(T), this->populationSize);
 
-                    //printf("Ptr: 0x%p Size: %d\n", this->states, sizeof(T) * this->populationSize);
+                    printf("States from: %p to %p\n", this->states, this->states + this->populationSize);
+                    printf("NewStates from: %p to %p\n", this->newStates, this->newStates + this->populationSize);
+                    std::flush(std::cout);
 
-                    for(int i = 0; i < this->populationSize; i ++) {
+                    for (int i = 0; i < this->populationSize; i++) {
                         this->generateRandom(&this->states[i]);
                     }
-                    std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
 
-                    T best = std::move(this->states[0]);
+                    std::sort(this->states, this->states + this->populationSize, this->compareFunction);
+                    printf("After Sort.\n");
+                    std::flush(std::cout);
+
+                    T best = T(this->states[0]);
+                    int bestGen = 0;
 
                     int generation = 0;
-                    while(generation < this->maxGenerations && !isGoal(&this->states[0])) {
+                    while (generation < this->maxGenerations && !isGoal(&this->states[0])) {
 
-                        //this->newStates = (T*) std::malloc(sizeof(T) * this->populationSize);
-                        //std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
-
-                        for(int i = 0; i < this->populationSize; i+=2) {
-                            T* father = &this->states[0];
-                            T* mother = &this->states[getNumberInRange(0, this->populationSize / 4)];
+                        for (int i = 0; i < this->populationSize; i += 2) {
+                            T *father = &this->states[0];
+                            T *mother = &this->states[getNumberInRange(0, this->populationSize / 4)];
                             this->cross(father, mother, &this->newStates[i]);
-                            this->cross(mother, father, &this->newStates[i+1]);
+                            this->cross(mother, father, &this->newStates[i + 1]);
                             this->mutate(&this->newStates[i], this->mutationRate);
-                            this->mutate(&this->newStates[i+1], this->mutationRate);
+                            this->mutate(&this->newStates[i + 1], this->mutationRate);
                         }
 
-                        std::sort(this->newStates, &this->newStates[this->populationSize], this->compareFunction);
+                        std::sort(this->newStates, this->newStates + this->populationSize, this->compareFunction);
+                        printf("After Sort.\n");
+                        std::flush(std::cout);
 
-                        if(this->compareFunction(this->newStates[0], best)) {
-                            best = std::move(this->newStates[0]);
+                        if (this->compareFunction(this->newStates[0], best)) {
+                            best = T(this->newStates[0]);
+                            bestGen = generation;
                         }
-                        //this->display(&this->newStates[0]);
+
+                        uint64_t fitnessSum = 0;
+                        for (int i = 0; i < this->populationSize; i++) {
+                            fitnessSum += this->newStates[i].calculateFitness();
+                        }
+                        //printf("%d;%d;%d;%.0f\n", generation, best.calculateFitness(), this->newStates[0].calculateFitness(), (float) fitnessSum / this->populationSize);
 
                         //Swapping Buffers
-                        T* tmp = this->states;
+                        T *tmp = this->states;
                         this->states = this->newStates;
                         this->newStates = tmp;
 
-                        //printf("Generation: %d\n", generation);
-                        //printf("[%d, %d, %d, %d, %d, %d, %d, %d]\n", this->states[0].queens[0], this->states[0].queens[1], this->states[0].queens[2], this->states[0].queens[3], this->states[0].queens[4], this->states[0].queens[5], this->states[0].queens[6], this->states[0].queens[7]);
-
-                        generation ++;
+                        generation++;
                     }
 
-                    std::sort(this->states, &this->states[this->populationSize], this->compareFunction);
+                    std::sort(this->states, this->states + this->populationSize, this->compareFunction);
+                    printf("After Sort.\n");
+                    std::flush(std::cout);
 
-                    if(isGoal(&this->states[0])) {
-                        return std::pair<T*, std::pair<int, int>>(&this->states[0], std::pair<int, int>(generation, this->states[0].calculateFitness()));
+                    if (isGoal(&this->states[0])) {
+                        return std::pair<T, std::pair<int, int>>(this->states[0], std::pair<int, int>(generation, best.calculateFitness()));
                     }
-                    return std::pair<T*, std::pair<int, int>>(&best, std::pair<int, int>(generation, this->states[0].calculateFitness()));
+                    printf("Best found after %d generations.\n", bestGen);
+                    return std::pair<T, std::pair<int, int>>(best, std::pair<int, int>(generation, best.calculateFitness()));
                 }
 
-                virtual bool isGoal(T* state) = 0;
+                virtual bool isGoal(T *state) = 0;
 
-                virtual void cross(T* parent1, T* parent2, T* out) = 0;
+                virtual void cross(T *parent1, T *parent2, T *out) = 0;
 
-                virtual void mutate(T* element, float rate) = 0;
+                virtual void mutate(T *element, float rate) = 0;
 
-                virtual void generateRandom(T*) = 0;
+                virtual void generateRandom(T *) = 0;
 
-                virtual void display(T* element) = 0;
+                virtual void display(T *element) = 0;
 
             private:
                 float mutationRate;
                 int populationSize;
                 int maxGenerations;
 
-                /*std::mt19937 generator = std::mt19937();
-                std::uniform_int_distribution<int> popDist = std::uniform_int_distribution<int>(0, this->populationSize);
-                std::uniform_int_distribution<int> top25Dist = std::uniform_int_distribution<int>(0, (int)(0.25 * this->populationSize));
-                std::uniform_real_distribution<float> floatDist = std::uniform_real_distribution<float>(0.0f, 1.0f);*/
+                bool (*compareFunction)(T &, T &);
 
-                bool (*compareFunction)(T&, T&);
-
-                T* states = nullptr;
-                T* newStates = nullptr;
+                T *states = nullptr;
+                T *newStates = nullptr;
 
         };
 
