@@ -35,7 +35,7 @@ char *getLecturerName(int mod) {
     return nullptr;
 }
 
-int Stundenplan::calculateFitness() {
+int StundenplanProblem::calcFitness(Stundenplan* state) {
     int collisions_1 = 0; //Collisions between modules in same semester
     int collisions_2 = 0; //Collisions between modules with same lecturer
     int collisions_3 = 0; //Collisions between modules in same room
@@ -43,14 +43,14 @@ int Stundenplan::calculateFitness() {
     for (int i = 0; i < TOTAL_MODULES; i++) {
         for (int j = i + 1; j < TOTAL_MODULES; j++) {
             //Same Day & Timeslot
-            if (modules[i][I_DAY] == modules[j][I_DAY] && modules[i][I_SLOT] == modules[j][I_SLOT]) {
+            if (state->modules[i][I_DAY] == state->modules[j][I_DAY] && state->modules[i][I_SLOT] == state->modules[j][I_SLOT]) {
                 if (ModuleSemester[i] == ModuleSemester[j]) { //Same Semester
                     collisions_1++;
                 }
                 if (doLecturerOverlap(i, j)) { //Same Lecturer
                     collisions_2++;
                 }
-                if (modules[i][I_ROOM] == modules[j][I_ROOM]) { //Same Room
+                if (state->modules[i][I_ROOM] == state->modules[j][I_ROOM]) { //Same Room
                     collisions_3++;
                 }
             }
@@ -59,7 +59,7 @@ int Stundenplan::calculateFitness() {
 
     int badTimedModules = 0;
     for (int i = 0; i < TOTAL_MODULES; i++) {
-        if (modules[i][I_SLOT] < 1 || modules[i][I_SLOT] > 3) {
+        if (state->modules[i][I_SLOT] < 1 || state->modules[i][I_SLOT] > 3) {
             badTimedModules++;
         }
     }
@@ -91,16 +91,11 @@ void StundenplanProblem::mutate(Stundenplan *instance, float rate) {
 bool StundenplanProblem::isGoal(Stundenplan *state) {
     //Function will never find the perfect solution, so it will always return false.
     //Maybe it will find a near perfect solution.
-    return state->calculateFitness() == 0;
+    return calcFitness(state) == 0;
 }
 
 bool StundenplanProblem::compare(Stundenplan &a, Stundenplan &b) {
-    int fA = a.calculateFitness();
-    int fB = b.calculateFitness();
-    if(fA == fB) {
-        return &a < &b;
-    }
-    return fA < fB;
+    return calcFitness(&a) < calcFitness(&b);
 }
 
 void StundenplanProblem::display(Stundenplan *state) {

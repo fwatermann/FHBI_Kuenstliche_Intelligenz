@@ -74,26 +74,23 @@ static const int ModuleSemester[] = {1,1,1,1,1,3,3,3,3,3,5,5,5,5,5,5};
 
 struct Stundenplan {
     int modules[TOTAL_MODULES][3]; //Day, Slot, Room
-    int calculateFitness();
 };
 
 bool doLecturerOverlap(int moduleA, int moduleB);
 char* getLecturerName(int module);
 bool validateValues(Stundenplan *plan);
 
-class StundenplanProblem : public KI::GeneticAlgorithm::Problem<Stundenplan> {
+class StundenplanProblem {
 
     public:
-        StundenplanProblem(float mutateRate, int popSize, int maxGens)
-            : KI::GeneticAlgorithm::Problem<Stundenplan>(mutateRate, popSize, maxGens, compare) {}
-
-        bool isGoal(Stundenplan *state) override;
-        void cross(Stundenplan* a, Stundenplan* b, Stundenplan* out) override;
-        void mutate(Stundenplan* instance, float rate) override;
-        void generateRandom(Stundenplan* out) override;
+        static bool isGoal(Stundenplan *state);
+        static void cross(Stundenplan* a, Stundenplan* b, Stundenplan* out);
+        static void mutate(Stundenplan* instance, float rate);
+        static void generateRandom(Stundenplan* out);
 
         static bool compare(Stundenplan &a, Stundenplan &b);
-        void display(Stundenplan *state) override;
+        static void display(Stundenplan *state);
+        static int calcFitness(Stundenplan *state);
 };
 
 

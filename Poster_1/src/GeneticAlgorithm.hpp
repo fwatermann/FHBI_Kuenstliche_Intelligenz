@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 #include <utility>
+#include <cstring>
 #include "RandomStuff.hpp"
 #include "Stundenplan.hpp"
 
