@@ -1,7 +1,8 @@
 #include <fstream>
-#include <locale>
+#include <cstring>
+#include <algorithm>
 #include "Stundenplan.hpp"
-//#define PRINT_CSV
+#include "RandomStuff.hpp"
 
 std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens, const char* fileoutput = nullptr);
 

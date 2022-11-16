@@ -1,8 +1,5 @@
-//
-// Created by finnw on 14.11.2022.
-//
-
 #include "Stundenplan.hpp"
+#include "RandomStuff.hpp"
 
 void StundenplanProblem::generateRandom(Stundenplan *out) {
     //Place Modules in random day in random slot in random room

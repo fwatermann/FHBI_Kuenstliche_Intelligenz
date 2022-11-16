@@ -15,8 +15,6 @@
 #define I_SLOT 1
 #define I_ROOM 2
 
-#include "GeneticAlgorithm.hpp"
-
 static const char* Workdays[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
 static const char *Modules[] = {"Mathematik 1",
