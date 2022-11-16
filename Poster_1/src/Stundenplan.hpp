@@ -15,8 +15,6 @@
 #define I_SLOT 1
 #define I_ROOM 2
 
-#include "GeneticAlgorithm.hpp"
-
 static const char* Workdays[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
 static const char *Modules[] = {"Mathematik 1",
@@ -74,26 +72,25 @@ static const int ModuleSemester[] = {1,1,1,1,1,3,3,3,3,3,5,5,5,5,5,5};
 
 struct Stundenplan {
     int modules[TOTAL_MODULES][3]; //Day, Slot, Room
-    int calculateFitness();
 };
 
 bool doLecturerOverlap(int moduleA, int moduleB);
 char* getLecturerName(int module);
 
-class StundenplanProblem : public KI::GeneticAlgorithm::Problem<Stundenplan> {
+class StundenplanProblem {
 
     public:
-        StundenplanProblem(float mutateRate, int popSize, int maxGens)
-            : KI::GeneticAlgorithm::Problem<Stundenplan>(mutateRate, popSize, maxGens, compare) {}
-
-        bool isGoal(Stundenplan *state) override;
-        void cross(Stundenplan* a, Stundenplan* b, Stundenplan* out) override;
-        void mutate(Stundenplan* instance, float rate) override;
-        void generateRandom(Stundenplan* out) override;
+        static bool isGoal(Stundenplan *state);
+        static void cross(Stundenplan* a, Stundenplan* b, Stundenplan* out);
+        static void mutate(Stundenplan* instance, float rate);
+        static void generateRandom(Stundenplan* out);
 
         static bool compare(Stundenplan &a, Stundenplan &b);
-        void display(Stundenplan *state) override;
+        static void display(Stundenplan *state);
+        static int calcFitness(Stundenplan *state);
 };
+
+
 
 
 #endif //POSTER_1_STUNDENPLAN_HPP
