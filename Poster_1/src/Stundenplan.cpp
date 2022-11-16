@@ -43,7 +43,9 @@ int StundenplanProblem::calcFitness(Stundenplan* state) {
     for (int i = 0; i < TOTAL_MODULES; i++) {
         for (int j = i + 1; j < TOTAL_MODULES; j++) {
             //Same Day & Timeslot
-            if (state->modules[i][I_DAY] == state->modules[j][I_DAY] && state->modules[i][I_SLOT] == state->modules[j][I_SLOT]) {
+            if (state->modules[i][I_DAY] == state->modules[j][I_DAY]
+                && state->modules[i][I_SLOT] == state->modules[j][I_SLOT]) {
+
                 if (ModuleSemester[i] == ModuleSemester[j]) { //Same Semester
                     collisions_1++;
                 }
@@ -89,8 +91,6 @@ void StundenplanProblem::mutate(Stundenplan *instance, float rate) {
 }
 
 bool StundenplanProblem::isGoal(Stundenplan *state) {
-    //Function will never find the perfect solution, so it will always return false.
-    //Maybe it will find a near perfect solution.
     return calcFitness(state) == 0;
 }
 
@@ -112,23 +112,5 @@ void StundenplanProblem::display(Stundenplan *state) {
             printf("\n");
         }
     }
-}
-
-bool validateValues(Stundenplan* plan) {
-    for(int i = 0; i < TOTAL_MODULES; i++) {
-        if(plan->modules[i][I_DAY] < 0 || plan->modules[i][I_DAY] > DAYS_IN_WEEK - 1) {
-            printf("Invalid Day: %d (i: %d)\n", plan->modules[i][I_DAY], i);
-            return false;
-        }
-        if(plan->modules[i][I_SLOT] < 0 || plan->modules[i][I_SLOT] > SLOTS_PER_DAY - 1) {
-            printf("Invalid Slot: %d (i: %d)\n", plan->modules[i][I_DAY], i);
-            return false;
-        }
-        if(plan->modules[i][I_ROOM] < 0 || plan->modules[i][I_ROOM] > MAX_ROOMS - 1) {
-            printf("Invalid Room: %d (i: %d)\n", plan->modules[i][I_DAY], i);
-            return false;
-        }
-    }
-    return true;
 }
 

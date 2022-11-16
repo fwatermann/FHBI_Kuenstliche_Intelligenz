@@ -9,7 +9,7 @@
 #define TOTAL_SEMESTERS 3
 #define DAYS_IN_WEEK 5
 #define SLOTS_PER_DAY 6
-#define MAX_ROOMS 10
+#define MAX_ROOMS 2
 
 #define I_DAY 0
 #define I_SLOT 1
@@ -78,7 +78,6 @@ struct Stundenplan {
 
 bool doLecturerOverlap(int moduleA, int moduleB);
 char* getLecturerName(int module);
-bool validateValues(Stundenplan *plan);
 
 class StundenplanProblem {
 

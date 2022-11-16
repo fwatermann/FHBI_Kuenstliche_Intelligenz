@@ -1,17 +1,19 @@
+#include <fstream>
+#include <locale>
 #include "Stundenplan.hpp"
 //#define PRINT_CSV
 
-std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens);
+std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens, const char* fileoutput = nullptr);
 
 int main() {
-    std::pair<Stundenplan, int> result = solve(0.05f, 100, 250);
+    std::pair<Stundenplan, int> result = solve(0.05f, 10, 250);
     printf("Generation: %d, Fitness: %d\n", result.second, StundenplanProblem::calcFitness(&result.first));
     StundenplanProblem::display(&result.first);
 
     return 0;
 }
 
-std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens) {
+std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens, const char* fileoutput) {
 
     /* SETUP */
     Stundenplan *bufferA = (Stundenplan *) std::calloc(popSize, sizeof(Stundenplan));
@@ -20,9 +22,6 @@ std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens) {
     std::memset(bufferA, 0, sizeof(Stundenplan) * popSize);
     std::memset(bufferB, 0, sizeof(Stundenplan) * popSize);
 
-    for(int i = 0; i < popSize; i++) {
-        StundenplanProblem::generateRandom(&bufferA[i]);
-    }
     std::sort(bufferA, bufferA + popSize, StundenplanProblem::compare);
 
     /* ALGORITHM */
@@ -31,7 +30,7 @@ std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens) {
     int bestGen = 0;
 
     int generation = 0;
-    while(generation < maxGens && !StundenplanProblem::isGoal(&bufferA[0])) {
+    while(generation < maxGens) {
 
         for(int i = 0; i < popSize; i += 2) {
             Stundenplan *father = &bufferA[0];
@@ -47,6 +46,19 @@ std::pair<Stundenplan, int> solve(float mutRate, int popSize, int maxGens) {
         if(StundenplanProblem::compare(bufferB[0], best)) {
             best = Stundenplan(bufferB[0]);
             bestGen = generation;
+        }
+
+        uint64_t fitnessSum = 0;
+        for(int i = 0; i < popSize; i++) {
+            fitnessSum += StundenplanProblem::calcFitness(&bufferB[i]);
+        }
+        if(fileoutput != nullptr) {
+            std::ofstream out;
+            out.open(fileoutput, std::ios::app);
+            out << generation << ";" << bestGen << ";" << StundenplanProblem::calcFitness(&best) << ";" << StundenplanProblem::calcFitness(&bufferB[0]) << ";" << (float) fitnessSum / popSize << std::endl;
+            out.close();
+        } else {
+            printf("%d;%d;%d;%.0f\n", generation, StundenplanProblem::calcFitness(&best), StundenplanProblem::calcFitness(&bufferB[0]), (float) fitnessSum / popSize);
         }
 
         std::swap(bufferA, bufferB);
